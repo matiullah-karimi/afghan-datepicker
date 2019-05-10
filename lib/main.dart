@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:afghan_date_picker/persian_date_picker.dart';
+import 'package:afghan_date_picker/afghan_date_picker.dart';
 
 
 void main() {
@@ -18,13 +18,13 @@ class HomeState extends State<Home> {
   // our text controller
   final TextEditingController textEditingController = TextEditingController();
 
-  PersianDatePicker persianDatePicker;
+  AfghanDatePicker persianDatePicker;
 
   @override
   void initState() {
 
     /*Simple DatePicker*/
-    persianDatePicker = PersianDatePicker(
+    persianDatePicker = AfghanDatePicker(
       controller: textEditingController,
 //      datetime: '1397/06/09',
     );

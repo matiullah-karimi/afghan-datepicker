@@ -4,7 +4,7 @@ import 'package:afghan_date_picker/utils/shamsi.dart';
 import 'package:afghan_date_picker/utils/translator.dart';
 import 'package:afghan_date_picker/utils/shared.dart';
 
-class PersianDatePicker extends StatefulWidget {
+class AfghanDatePicker extends StatefulWidget {
   final bool rangeSelector;
   final TextEditingController controller;
 
@@ -36,7 +36,7 @@ class PersianDatePicker extends StatefulWidget {
   final Color disabledDayBackgroundColor;
   final Color disabledDayFontColor;
 
-  PersianDatePicker(
+  AfghanDatePicker(
       {this.yearSelectionAnimationDuration,
       this.yearSelectionAnimationCurve,
       this.yearSelectionHighlightBackgroundColor,
@@ -68,10 +68,10 @@ class PersianDatePicker extends StatefulWidget {
       this.headerTodayIcon});
 
   @override
-  _PersianDatePickerState createState() => _PersianDatePickerState();
+  _AfghanDatePickerState createState() => _AfghanDatePickerState();
 }
 
-class _PersianDatePickerState extends State<PersianDatePicker>
+class _AfghanDatePickerState extends State<AfghanDatePicker>
     with TickerProviderStateMixin {
   int _yearSelectionAnimationDuration;
   Curve _yearSelectionAnimationCurve;
