@@ -88,8 +88,8 @@ class AfghaniDate {
   }
 
   // Returns the afghani date in determined format
-  String format(String format, {bool persianNumbers = false}) {
+  String format(String format, {bool persianNumbers = false, String locale = "fa"}) {
     DateData jDate = DateData(year, month, day);
-    return translate(format, jDate, persianNumbers);
+    return translate(format, jDate, persianNumbers, locale);
   }
 }

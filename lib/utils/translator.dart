@@ -1,13 +1,13 @@
 import 'package:afghan_date_picker/utils/shared.dart';
 
 /// Translates input format to a readable string date
-String translate(String input, DateData date, bool persianNumbers) {
+String translate(String input, DateData date, bool persianNumbers, String locale) {
   input = input.replaceAll("YYYY", date.year.toString());
   input = input.replaceAll("YY", date.year.toString().substring(2, 4));
-  input = input.replaceAll("MMM", _getJalaaliMonthName(date.month));
+  input = input.replaceAll("MMM", _getLocalizedMonthName(date.month, locale));
   input = input.replaceAll("MM", date.month.toString().padLeft(2, "0"));
   input = input.replaceAll("M", date.month.toString());
-  input = input.replaceAll("DDD", _getPersianNumber(date.day));
+  input = input.replaceAll("DDD", _getLocalizedNumber(date.day, locale));
   input = input.replaceAll("DD", date.day.toString().padLeft(2, "0"));
   input = input.replaceAll("D", date.day.toString());
   if (persianNumbers) {
@@ -30,136 +30,136 @@ String translateNumbers(String input) {
   return input;
 }
 
-/// Returns jalaali month name
-String _getJalaaliMonthName(int month) {
+/// Returns localized month name
+String _getLocalizedMonthName(int month, String locale) {
   switch (month) {
     case 1:
-      return "حمل";
+      return locale == "ps" ? "وری" : "حمل";
     case 2:
-      return "ثور";
+      return locale == "ps" ? "غویی" : "ثور";
     case 3:
-      return "جوزا";
+      return locale == "ps" ? "غبرګلی" : "جوزا";
     case 4:
-      return "سرطان";
+      return locale == "ps" ? "چنګاښ" : "سرطان";
     case 5:
-      return "اسد";
+      return locale == "ps" ? "زمری" : "اسد";
     case 6:
-      return "سنبله";
+      return locale == "ps" ? "وږی" : "سنبله";
     case 7:
-      return "میزان";
+      return locale == "ps" ? "تله" : "میزان";
     case 8:
-      return "عقرب";
+      return locale == "ps" ? "لړم" : "عقرب";
     case 9:
-      return "قوس";
+      return locale == "ps" ? "ليندۍ" : "قوس";
     case 10:
-      return "جدی";
+      return locale == "ps" ? "مرغومی" : "جدی";
     case 11:
-      return "دلو";
+      return locale == "ps" ? "سلواغه" : "دلو";
     case 12:
-      return "حوت";
+      return locale == "ps" ? "کب" : "حوت";
     default:
       return "خطا";
   }
 }
 
-String _getPersianNumber(int number) {
+String _getLocalizedNumber(int number, String locale) {
   String output;
   switch (number) {
     case 1:
-      output = "یک";
+      output = locale == "ps" ? "یو" : "یک";
       break;
     case 2:
-      output = "دو";
+      output = locale == "ps" ? "دوه" : "دو";
       break;
     case 3:
-      output = "سه";
+      output = locale == "ps" ? "دری" : "سه";
       break;
     case 4:
-      output = "چهار";
+      output = locale == "ps" ? "څلور" : "چهار";
       break;
     case 5:
-      output = "پنج";
+      output = locale == "ps" ? "پنځه" : "پنج";
       break;
     case 6:
-      output = "شش";
+      output = locale == "ps" ? "شپږ" : "شش";
       break;
     case 7:
-      output = "هفت";
+      output = locale == "ps" ? "اووه" : "هفت";
       break;
     case 8:
-      output = "هشت";
+      output = locale == "ps" ? "اته" : "هشت";
       break;
     case 9:
-      output = "نه";
+      output = locale == "ps" ? "نه" : "نه";
       break;
     case 10:
-      output = "ده";
+      output = locale == "ps" ? "لس" : "ده";
       break;
     case 11:
-      output = "یازده";
+      output = locale == "ps" ? "یولس" : "یازده";
       break;
     case 12:
-      output = "دوازده";
+      output = locale == "ps" ? "دو ولس" : "دوازده";
       break;
     case 13:
-      output = "سیزده";
+      output = locale == "ps" ? "دیار لس" : "سیزده";
       break;
     case 14:
-      output = "چهارده";
+      output = locale == "ps" ? "څوار لس" : "چهارده";
       break;
     case 15:
-      output = "پانزده";
+      output = locale == "ps" ? "پنځه لس" : "پانزده";
       break;
     case 16:
-      output = "شانزده";
+      output = locale == "ps" ? "شپاړس" : "شانزده";
       break;
     case 17:
-      output = "هفده";
+      output = locale == "ps" ? "اوولس" : "هفده";
       break;
     case 18:
-      output = "هجده";
+      output = locale == "ps" ? "اته لس" : "هجده";
       break;
     case 19:
-      output = "نونزده";
+      output = locale == "ps" ? "نولس" : "نونزده";
       break;
     case 20:
-      output = "بیست";
+      output = locale == "ps" ? "شل" : "بیست";
       break;
     case 21:
-      output = "بیست و یک";
+      output = locale == "ps" ? "یوویشت" : "بیست و یک";
       break;
     case 22:
-      output = "بیست و دو";
+      output = locale == "ps" ? "دوه ویشت" : "بیست و دو";
       break;
     case 23:
-      output = "بیست و سه";
+      output = locale == "ps" ? "درویشت" : "بیست و سه";
       break;
     case 24:
-      output = "بیست و چهار";
+      output = locale == "ps" ? "څلور ویشت" : "بیست و چهار";
       break;
     case 25:
-      output = "بیست و پنج";
+      output = locale == "ps" ? "پنځه ویشت" : "بیست و پنج";
       break;
     case 26:
-      output = "بیست و شش";
+      output = locale == "ps" ? "شپږ ویشت" : "بیست و شش";
       break;
     case 27:
-      output = "بیست و هفت";
+      output = locale == "ps" ? "اووه ویشت" : "بیست و هفت";
       break;
     case 28:
-      output = "بیست و هشت";
+      output = locale == "ps" ? "اته ویشت" : "بیست و هشت";
       break;
     case 29:
-      output = "بیست و نه";
+      output = locale == "ps" ? "نه ویشت" : "بیست و نه";
       break;
-    case 30:
-      output = "سی";
+    case 30: 
+      output = locale == "ps" ? "دیرش" : "سی";
       break;
     case 31:
-      output = "سی و یک";
+      output = locale == "ps" ? "یو دیرش" : "سی و یک";
       break;
     case 32:
-      output = "سی و دو";
+      output = locale == "ps" ? "دوه دیرش" : "سی و دو";
       break;
     default:
       return "خطا";

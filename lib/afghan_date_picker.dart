@@ -35,6 +35,7 @@ class AfghanDatePicker extends StatefulWidget {
   final Color headerTodayBackgroundColor;
   final Color disabledDayBackgroundColor;
   final Color disabledDayFontColor;
+  final String locale;
 
   AfghanDatePicker(
       {this.yearSelectionAnimationDuration,
@@ -65,7 +66,8 @@ class AfghanDatePicker extends StatefulWidget {
       this.controller,
       this.rangeSelector: false,
       this.headerTodayCaption,
-      this.headerTodayIcon});
+      this.headerTodayIcon,
+      this.locale = "fa"});
 
   @override
   _AfghanDatePickerState createState() => _AfghanDatePickerState();
@@ -245,7 +247,7 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
           );
     _headerTodayCaption = (widget.headerTodayCaption != null)
         ? widget.headerTodayCaption
-        : 'امروز';
+        : widget.locale == 'ps' ? 'نن ورځ' : 'امروز';
   }
 
   @override
@@ -664,50 +666,19 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      yearAnimationController.reset();
-                      if (monthAnimationController.isDismissed)
-                        monthAnimationController.forward();
-                      else
-                        monthAnimationController.reverse();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            child: Icon(
-                              Icons.expand_more,
-                              size: 18,
-                              color: _headerFontColor,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Container(
-                            child: Text(
-                              translate('MMM', datetime, false),
-                              style: TextStyle(
-                                  fontSize: 19, color: _headerFontColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  GestureDetector(
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
                       onTap: () {
-                        monthAnimationController.reset();
-                        if (yearAnimationController.isDismissed)
-                          yearAnimationController.forward();
+                        yearAnimationController.reset();
+                        if (monthAnimationController.isDismissed)
+                          monthAnimationController.forward();
                         else
-                          yearAnimationController.reverse();
+                          monthAnimationController.reverse();
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -715,51 +686,90 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
                         child: Row(
                           children: <Widget>[
                             Container(
-                              child: Text(datetime.year.toString(),
-                                  style: TextStyle(
-                                      fontSize: 19, color: _headerFontColor)),
-                            ),
-                            SizedBox(width: 8),
-                            Container(
-                              margin: EdgeInsets.only(top: 1),
                               child: Icon(
                                 Icons.expand_more,
                                 size: 18,
                                 color: _headerFontColor,
                               ),
                             ),
+                            SizedBox(width: 4),
+                            Container(
+                              child: Text(
+                                translate(
+                                    'MMM', datetime, false, widget.locale),
+                                style: TextStyle(
+                                    fontSize: 19, color: _headerFontColor),
+                              ),
+                            ),
                           ],
                         ),
-                      ))
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                        onTap: () {
+                          monthAnimationController.reset();
+                          if (yearAnimationController.isDismissed)
+                            yearAnimationController.forward();
+                          else
+                            yearAnimationController.reverse();
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                child: Text(datetime.year.toString(),
+                                    style: TextStyle(
+                                        fontSize: 19, color: _headerFontColor)),
+                              ),
+                              SizedBox(width: 8),
+                              Container(
+                                margin: EdgeInsets.only(top: 1),
+                                child: Icon(
+                                  Icons.expand_more,
+                                  size: 18,
+                                  color: _headerFontColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  )
                 ],
               ),
             ),
             Expanded(
               flex: 1,
-              child: InkWell(
-                onTap: () {
-                  datePickerController.animateToPage(todayPageIndex,
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeIn);
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _headerTodayIcon,
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                          padding: EdgeInsets.only(top: 3),
-                          child: Text(
-                            _headerTodayCaption,
-                            style: TextStyle(fontSize: 19),
-                          ))
-                    ],
+              child: Material(
+                child: InkWell(
+                  onTap: () {
+                    datePickerController.animateToPage(todayPageIndex,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeIn);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _headerTodayIcon,
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Container(
+                            padding: EdgeInsets.only(top: 3),
+                            child: Text(
+                              _headerTodayCaption,
+                              style: TextStyle(fontSize: 19),
+                            ))
+                      ],
+                    ),
+                    color: _headerTodayBackgroundColor,
                   ),
-                  color: _headerTodayBackgroundColor,
                 ),
               ),
             )
@@ -880,7 +890,7 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
                   color: bgColor),
               child: Center(
                   child: Text(
-                translate('MMM', datetime, false),
+                translate('MMM', datetime, false, widget.locale),
                 style: TextStyle(fontSize: 16, color: fontColor),
               )),
             ),
