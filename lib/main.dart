@@ -21,7 +21,7 @@ class HomeState extends State<Home> {
   void initState() {
     persianDatePicker = AfghanDatePicker(
       controller: textEditingController,
-      locale: "ps",
+      locale: "fa",
     );
 
     super.initState();
@@ -35,20 +35,25 @@ class HomeState extends State<Home> {
           title: Text('Afghan Datepicker'),
         ),
         body: Builder(builder: (BuildContext context) {
-          return Container(
-            child: TextField(
-              enableInteractiveSelection:
-                  false, // *** this is important to prevent user interactive selection ***
-              onTap: () {
-                FocusScope.of(context).requestFocus(
-                    new FocusNode()); // to prevent opening default keyboard
-                showDialog(
+          return Material(
+            child: Container(
+              child: TextField(
+                enableInteractiveSelection: false,
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return Center(child: Container(padding: EdgeInsets.all(10), child: persianDatePicker));
-                    });
-              },
-              controller: textEditingController,
+                      return Center(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: persianDatePicker),
+                      );
+                    },
+                  );
+                },
+                controller: textEditingController,
+              ),
             ),
           );
         }),

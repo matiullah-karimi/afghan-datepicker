@@ -180,7 +180,7 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
     _yearSelectionHighlightBackgroundColor =
         (widget.yearSelectionHighlightBackgroundColor != null)
             ? widget.yearSelectionHighlightBackgroundColor
-            : Colors.orange[100];
+            : Colors.blue[100];
     _yearSelectionHighlightFontColor =
         (widget.yearSelectionHighlightFontColor != null)
             ? widget.yearSelectionHighlightFontColor
@@ -188,14 +188,14 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
     _monthSelectionBackgroundColor =
         (widget.monthSelectionBackgroundColor != null)
             ? widget.monthSelectionBackgroundColor
-            : Colors.blue;
+            : Colors.white;
     _monthSelectionFontColor = (widget.monthSelectionFontColor != null)
         ? widget.monthSelectionFontColor
         : Colors.black;
     _monthSelectionHighlightBackgroundColor =
         (widget.monthSelectionHighlightBackgroundColor != null)
             ? widget.monthSelectionHighlightBackgroundColor
-            : Colors.orange[100];
+            : Colors.blue[100];
     _monthSelectionHighlightFontColor =
         (widget.monthSelectionHighlightFontColor != null)
             ? widget.monthSelectionHighlightFontColor
@@ -255,7 +255,7 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
     // initialize parameters if they exist or use default options
     initializeParams();
 
-    // change TextField input to a jalaali data-type, if there is no input, then current date is used
+    // change TextField input to a afghani data-type, if there is no input, then current date is used
     inputStringToAfghani();
 
     // set current month and year of the datepicker to selected input string
@@ -289,7 +289,7 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
         if (year == currentDate.year && month == currentDate.month)
           todayPageIndex = pageIndex;
 
-        // by using jalaali package, calculate the number of days of current month
+        // by using afghani package, calculate the number of days of current month
         int shamsiDaysOfMonth = shamsiDaysInMonth(month, year);
 
         // by adding (shamsiDaysOfMonth + firstDayOfMonthInWeek) and % it to 7 ( number of days in a week )
@@ -338,151 +338,150 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
   Widget build(BuildContext context) {
     // in order to hide year and month little-dialogs when tapping anywhere on datepicker, we wrap our datepicker by a GestureDetector
     // and inside it's onTap reset both year and month animations
-    return GestureDetector(
-      onTap: () {
-        yearAnimationController.reset();
-        monthAnimationController.reset();
-      },
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Container(
-          height: bottomSheetHeight,
-          child: Stack(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      child: PageView.builder(
-                        onPageChanged: (index) {
-                          // if page is changed, swiped, we change datepicker current month and year and chaning datepicker state
-                          Map<String, dynamic> pageInfo = pages[index];
-                          datePickerCurrentMonth = pageInfo['M'];
-                          datePickerCurrentYear = pageInfo['Y'];
-                          setState(() {});
-                        },
-                        controller: datePickerController,
+    return Material(
+      child: GestureDetector(
+        onTap: () {
+          yearAnimationController.reset();
+          monthAnimationController.reset();
+        },
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Container(
+            height: bottomSheetHeight,
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        child: PageView.builder(
+                          onPageChanged: (index) {
+                            // if page is changed, swiped, we change datepicker current month and year and chaning datepicker state
+                            Map<String, dynamic> pageInfo = pages[index];
+                            datePickerCurrentMonth = pageInfo['M'];
+                            datePickerCurrentYear = pageInfo['Y'];
+                            setState(() {});
+                          },
+                          controller: datePickerController,
 
-                        // the number of pages
-                        itemCount: pages.length,
+                          // the number of pages
+                          itemCount: pages.length,
 
-                        // building pages
-                        itemBuilder: (BuildContext context, int index) {
-                          // getting page info from pages list by it's index
-                          Map<String, dynamic> pageInfo = pages[index];
+                          // building pages
+                          itemBuilder: (BuildContext context, int index) {
+                            // getting page info from pages list by it's index
+                            Map<String, dynamic> pageInfo = pages[index];
 
-                          // store the parts of page inside a list of widgets
-                          List<Widget> datePicker = [];
+                            // store the parts of page inside a list of widgets
+                            List<Widget> datePicker = [];
 
-                          // in most cases the number of rows of days for each page is 7
-                          // but in some cases, if the starting day of current month is ( thu, fri )
-                          // the number of rows may be 8. so we check it here
-                          int viewPortDays = 35;
-                          if ((pageInfo['DIM'] + pageInfo['FDIW']) > 35) {
-                            viewPortDays = 42;
-                          }
-
-                          // rendering days row by row.
-                          // first row starts by 0 index
-                          int previousRowDayNumber = 0;
-                          for (int row = 1; row <= (viewPortDays / 7); row++) {
-                            List<Widget> rowWidgets = [];
-
-                            // if it is first row, then we need to display headers before days rows above current row of days,
-                            // and also display previous month days before current month starting day
-                            if (row == 1) {
-                              datePicker.addAll([
-                                _datePickerPageHeader(pageInfo),
-                                _datePickerPageWeekCaptions(),
-                              ]);
-
-                              // displaying previous month days
-                              for (int daysBefore = (pageInfo['PMDIM'] -
-                                      pageInfo['FDIW'] +
-                                      1);
-                                  daysBefore <= pageInfo['PMDIM'];
-                                  daysBefore++) {
-                                rowWidgets.add(_dayBlock(
-                                    day: daysBefore,
-                                    otherMonthDay: true,
-                                    pageInfo: pageInfo));
-                              }
-
-                              // displaying current month days in this row
-                              for (int firstRowDays = 1;
-                                  firstRowDays <= (7 - pageInfo['FDIW']);
-                                  firstRowDays++) {
-                                rowWidgets.add(_dayBlock(
-                                    day: firstRowDays, pageInfo: pageInfo));
-                              }
-
-                              previousRowDayNumber = (7 - pageInfo['FDIW']);
-
-                              // if this row is the last row
-                            } else if (row == (viewPortDays / 7)) {
-                              // display days of current row
-                              for (int lastRowDays = previousRowDayNumber + 1;
-                                  lastRowDays <= pageInfo['DIM'];
-                                  lastRowDays++) {
-                                rowWidgets.add(_dayBlock(
-                                    day: lastRowDays, pageInfo: pageInfo));
-                              }
-
-                              // display days of next month right after the last day of current month
-                              for (int daysAfter = viewPortDays;
-                                  daysAfter >
-                                      (pageInfo['DIM'] + pageInfo['FDIW']);
-                                  daysAfter--) {
-                                rowWidgets.add(_dayBlock(
-                                    day: viewPortDays - daysAfter + 1,
-                                    otherMonthDay: true,
-                                    pageInfo: pageInfo));
-                              }
-
-                              // if this row is not first and last...
-                            } else {
-                              // displaying days of current row
-                              for (int dayRow = previousRowDayNumber + 1;
-                                  dayRow <= (previousRowDayNumber + 7);
-                                  dayRow++) {
-                                rowWidgets.add(
-                                    _dayBlock(day: dayRow, pageInfo: pageInfo));
-                              }
-
-                              previousRowDayNumber += 7;
+                            // in most cases the number of rows of days for each page is 7
+                            // but in some cases, if the starting day of current month is ( thu, fri )
+                            // the number of rows may be 8. so we check it here
+                            int viewPortDays = 35;
+                            if ((pageInfo['DIM'] + pageInfo['FDIW']) > 35) {
+                              viewPortDays = 42;
                             }
 
-                            datePicker.add(Row(
-                              children: rowWidgets,
-                            ));
-                          }
+                            // rendering days row by row.
+                            // first row starts by 0 index
+                            int previousRowDayNumber = 0;
+                            for (int row = 1; row <= (viewPortDays / 7); row++) {
+                              List<Widget> rowWidgets = [];
 
-                          return Column(
-                            children: datePicker,
-                          );
-                        },
+                              // if it is first row, then we need to display headers before days rows above current row of days,
+                              // and also display previous month days before current month starting day
+                              if (row == 1) {
+                                datePicker.addAll([
+                                  _datePickerPageHeader(pageInfo),
+                                  _datePickerPageWeekCaptions(),
+                                ]);
+
+                                // displaying previous month days
+                                for (int daysBefore = (pageInfo['PMDIM'] -
+                                        pageInfo['FDIW'] +
+                                        1);
+                                    daysBefore <= pageInfo['PMDIM'];
+                                    daysBefore++) {
+                                  rowWidgets.add(_dayBlock(
+                                      day: daysBefore,
+                                      otherMonthDay: true,
+                                      pageInfo: pageInfo));
+                                }
+
+                                // displaying current month days in this row
+                                for (int firstRowDays = 1;
+                                    firstRowDays <= (7 - pageInfo['FDIW']);
+                                    firstRowDays++) {
+                                  rowWidgets.add(_dayBlock(
+                                      day: firstRowDays, pageInfo: pageInfo));
+                                }
+
+                                previousRowDayNumber = (7 - pageInfo['FDIW']);
+
+                                // if this row is the last row
+                              } else if (row == (viewPortDays / 7)) {
+                                // display days of current row
+                                for (int lastRowDays = previousRowDayNumber + 1;
+                                    lastRowDays <= pageInfo['DIM'];
+                                    lastRowDays++) {
+                                  rowWidgets.add(_dayBlock(
+                                      day: lastRowDays, pageInfo: pageInfo));
+                                }
+
+                                // display days of next month right after the last day of current month
+                                for (int daysAfter = viewPortDays;
+                                    daysAfter >
+                                        (pageInfo['DIM'] + pageInfo['FDIW']);
+                                    daysAfter--) {
+                                  rowWidgets.add(_dayBlock(
+                                      day: viewPortDays - daysAfter + 1,
+                                      otherMonthDay: true,
+                                      pageInfo: pageInfo));
+                                }
+
+                                // if this row is not first and last...
+                              } else {
+                                // displaying days of current row
+                                for (int dayRow = previousRowDayNumber + 1;
+                                    dayRow <= (previousRowDayNumber + 7);
+                                    dayRow++) {
+                                  rowWidgets.add(
+                                      _dayBlock(day: dayRow, pageInfo: pageInfo));
+                                }
+
+                                previousRowDayNumber += 7;
+                              }
+
+                              datePicker.add(Row(
+                                children: rowWidgets,
+                              ));
+                            }
+
+                            return Column(
+                              children: datePicker,
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  )
-                ],
-              ),
+                    )
+                  ],
+                ),
 
-              // years dialog widget
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: ScaleTransition(
-                  scale: CurvedAnimation(
-                      parent: yearAnimationController,
-                      curve: Interval(0.0, 1.0,
-                          curve: _yearSelectionAnimationCurve)),
-                  child: Center(
+                // years dialog widget
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: ScaleTransition(
+                    scale: CurvedAnimation(
+                        parent: yearAnimationController,
+                        curve: Interval(0.0, 1.0,
+                            curve: _yearSelectionAnimationCurve)),
                     child: Container(
                       height: 200,
                       width: 100,
-                      decoration:
-                          BoxDecoration(color: Colors.white, boxShadow: [
+                      decoration: BoxDecoration(color: Colors.white, boxShadow: [
                         BoxShadow(
                           color: Colors.black54,
                           blurRadius: 5,
@@ -493,24 +492,21 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
                     ),
                   ),
                 ),
-              ),
 
-              // month dialog widget
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: ScaleTransition(
-                  scale: CurvedAnimation(
-                      parent: monthAnimationController,
-                      curve: Interval(0.0, 1.0,
-                          curve: _monthSelectionAnimationCurve)),
-                  child: Center(
+                // month dialog widget
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: ScaleTransition(
+                    scale: CurvedAnimation(
+                        parent: monthAnimationController,
+                        curve: Interval(0.0, 1.0,
+                            curve: _monthSelectionAnimationCurve)),
                     child: Container(
                       height: 200,
                       width: 100,
-                      decoration:
-                          BoxDecoration(color: Colors.white, boxShadow: [
+                      decoration: BoxDecoration(color: Colors.white, boxShadow: [
                         BoxShadow(
                           color: Colors.black54,
                           blurRadius: 5,
@@ -520,9 +516,9 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
                       child: displayMonths(),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -636,7 +632,7 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
                     day.toString();
               }
 
-              // after updating input by selected date, we convert the selected date to jalaali date
+              // after updating input by selected date, we convert the selected date to afghani date
               inputStringToAfghani();
 
               setState(() {});
@@ -660,25 +656,60 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
   Widget _datePickerPageHeader(pageInfo) {
     DateData datetime = DateData(pageInfo['Y'], pageInfo['M'], 1);
     return Container(
-        color: _headerBackgroundColor,
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
+      color: _headerBackgroundColor,
+      height: 50,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      yearAnimationController.reset();
+                      if (monthAnimationController.isDismissed)
+                        monthAnimationController.forward();
+                      else
+                        monthAnimationController.reverse();
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            child: Icon(
+                              Icons.expand_more,
+                              size: 18,
+                              color: _headerFontColor,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Container(
+                            child: Text(
+                              translate('MMM', datetime, false, widget.locale),
+                              style: TextStyle(
+                                  fontSize: 19, color: _headerFontColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
                       onTap: () {
-                        yearAnimationController.reset();
-                        if (monthAnimationController.isDismissed)
-                          monthAnimationController.forward();
+                        monthAnimationController.reset();
+                        if (yearAnimationController.isDismissed)
+                          yearAnimationController.forward();
                         else
-                          monthAnimationController.reverse();
+                          yearAnimationController.reverse();
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -686,95 +717,60 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
                         child: Row(
                           children: <Widget>[
                             Container(
+                              child: Text(datetime.year.toString(),
+                                  style: TextStyle(
+                                      fontSize: 19, color: _headerFontColor)),
+                            ),
+                            SizedBox(width: 8),
+                            Container(
+                              margin: EdgeInsets.only(top: 1),
                               child: Icon(
                                 Icons.expand_more,
                                 size: 18,
                                 color: _headerFontColor,
                               ),
                             ),
-                            SizedBox(width: 4),
-                            Container(
-                              child: Text(
-                                translate(
-                                    'MMM', datetime, false, widget.locale),
-                                style: TextStyle(
-                                    fontSize: 19, color: _headerFontColor),
-                              ),
-                            ),
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                        onTap: () {
-                          monthAnimationController.reset();
-                          if (yearAnimationController.isDismissed)
-                            yearAnimationController.forward();
-                          else
-                            yearAnimationController.reverse();
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                child: Text(datetime.year.toString(),
-                                    style: TextStyle(
-                                        fontSize: 19, color: _headerFontColor)),
-                              ),
-                              SizedBox(width: 8),
-                              Container(
-                                margin: EdgeInsets.only(top: 1),
-                                child: Icon(
-                                  Icons.expand_more,
-                                  size: 18,
-                                  color: _headerFontColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )),
-                  )
-                ],
-              ),
+                      )),
+                )
+              ],
             ),
-            Expanded(
-              flex: 1,
-              child: Material(
-                child: InkWell(
-                  onTap: () {
-                    datePickerController.animateToPage(todayPageIndex,
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeIn);
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        _headerTodayIcon,
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Container(
-                            padding: EdgeInsets.only(top: 3),
-                            child: Text(
-                              _headerTodayCaption,
-                              style: TextStyle(fontSize: 19),
-                            ))
-                      ],
-                    ),
-                    color: _headerTodayBackgroundColor,
+          ),
+          Expanded(
+            flex: 1,
+            child: Material(
+              child: InkWell(
+                onTap: () {
+                  datePickerController.animateToPage(todayPageIndex,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeIn);
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      _headerTodayIcon,
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                          padding: EdgeInsets.only(top: 3),
+                          child: Text(
+                            _headerTodayCaption,
+                            style: TextStyle(fontSize: 19),
+                          ))
+                    ],
                   ),
+                  color: _headerTodayBackgroundColor,
                 ),
               ),
-            )
-          ],
-        ));
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _datePickerPageWeekCaptions() {
@@ -794,13 +790,15 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
   Widget _weekDayCaption(String title) {
     return Expanded(
       child: Container(
-          padding: EdgeInsets.all(6),
-          color: _weekCaptionsBackgroundColor,
-          child: Center(
-              child: Text(
+        padding: EdgeInsets.all(6),
+        color: _weekCaptionsBackgroundColor,
+        child: Center(
+          child: Text(
             title,
             style: TextStyle(color: _weekCaptionsFontColor, fontSize: 16),
-          ))),
+          ),
+        ),
+      ),
     );
   }
 
@@ -841,12 +839,12 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
               decoration: BoxDecoration(
                   border: Border(top: BorderSide(color: Colors.black12)),
                   color: bgColor),
-//            margin: EdgeInsets.symmetric(vertical: 2.0),
               child: Center(
-                  child: Text(
-                years[index].toString(),
-                style: TextStyle(fontSize: 16, color: fontColor),
-              )),
+                child: Text(
+                  years[index].toString(),
+                  style: TextStyle(fontSize: 16, color: fontColor),
+                ),
+              ),
             ),
           );
         });
@@ -875,7 +873,6 @@ class _AfghanDatePickerState extends State<AfghanDatePicker>
           return GestureDetector(
             onTap: () {
               datePickerCurrentMonth = index + 1;
-              setState(() {});
               datePickerController.animateToPage(
                   (datePickerCurrentYear - startDate.year) * 12 + index,
                   duration: Duration(milliseconds: 400),
