@@ -15,14 +15,14 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   final TextEditingController textEditingController = TextEditingController();
 
-  AfghanDatePicker persianDatePicker;
+  AfghanDatePickerWidget afghanDatePicker;
 
   @override
   void initState() {
-    persianDatePicker = AfghanDatePicker(
+    afghanDatePicker = AfghanDatePicker(
       controller: textEditingController,
-      locale: "fa",
-    );
+      locale: 'ps'
+    ).init();
 
     super.initState();
   }
@@ -47,7 +47,7 @@ class HomeState extends State<Home> {
                       return Center(
                         child: Container(
                           padding: EdgeInsets.all(10),
-                          child: persianDatePicker),
+                          child: afghanDatePicker),
                       );
                     },
                   );
