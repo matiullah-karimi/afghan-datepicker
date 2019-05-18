@@ -1,3 +1,4 @@
+import 'package:afghan_date_picker/AfghanDatePickerLocale.dart';
 import 'package:flutter/material.dart';
 import 'package:afghan_date_picker/afghan_date_picker.dart';
 
@@ -21,7 +22,7 @@ class HomeState extends State<Home> {
   void initState() {
     afghanDatePicker = AfghanDatePicker(
       controller: textEditingController,
-      locale: 'fa',
+      locale: AfghanDatePickerLocale.PASHTO,
       farsiDigits: true
     ).init();
 
