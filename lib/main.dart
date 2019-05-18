@@ -21,7 +21,8 @@ class HomeState extends State<Home> {
   void initState() {
     afghanDatePicker = AfghanDatePicker(
       controller: textEditingController,
-      locale: 'ps'
+      locale: 'fa',
+      farsiDigits: true
     ).init();
 
     super.initState();

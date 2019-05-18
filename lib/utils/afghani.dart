@@ -1,4 +1,4 @@
-library afghani_js;
+library afghani;
 
 String farsiNumbers(String input) {
   input = input.replaceAll("0", "۰");
